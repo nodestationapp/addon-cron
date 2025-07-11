@@ -1,0 +1,6 @@
+# NODE_MODULES
+node_modules/
+package-lock.json
+
+#SYSTEM CONFIG
+.DS_Store

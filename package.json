@@ -1,0 +1,68 @@
+{
+  "name": "@nstation/addon-cron",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "MIT",
+  "description": "Nodestation's cron plugin",
+  "scripts": {
+    "release": "release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodestationapp/addon-cron.git"
+  },
+  "files": [
+    "./client",
+    "./server",
+    "./package.json"
+  ],
+  "author": {
+    "name": "Krystian Wachnicki",
+    "email": "ceo@nodestation.app"
+  },
+  "dependencies": {
+    "node-cron": "^4.1.0"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "^9.0.3",
+    "release-it": "^17.10.0"
+  },
+  "imports": {
+    "#client/*": "./client/*",
+    "#server/*": "./server/*"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}",
+      "tagName": "v${version}",
+      "requireCleanWorkingDir": false
+    },
+    "npm": false,
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "types": [
+          {
+            "type": "feat",
+            "section": "Features"
+          },
+          {
+            "type": "fix",
+            "section": "Bug Fixes"
+          },
+          {
+            "type": "chore(deps)",
+            "section": "Chores"
+          },
+          {
+            "type": "test",
+            "section": "Tests"
+          }
+        ]
+      }
+    }
+  }
+}
