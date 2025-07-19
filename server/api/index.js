@@ -9,22 +9,19 @@ import "#server/utils/cronWorker.js";
 export default [
   {
     method: "GET",
-    path: "/crons",
-    type: "admin",
+    path: "/admin-api/crons",
     handler: getCrons,
     middlewares: [authMiddleware(["admin"])],
   },
   {
     method: "POST",
-    path: "/crons",
-    type: "admin",
+    path: "/admin-api/crons",
     handler: addCron,
     middlewares: [authMiddleware(["admin"])],
   },
   {
     method: "DELETE",
-    path: "/crons/:id",
-    type: "admin",
+    path: "/admin-api/crons/:id",
     handler: deleteCron,
     middlewares: [authMiddleware(["admin"])],
   },
