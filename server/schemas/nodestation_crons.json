@@ -1,0 +1,49 @@
+{
+  "display_name": "name",
+  "tableName": "nodestation_crons",
+  "fields": [
+    {
+      "name": "ID",
+      "slug": "id",
+      "type": "id",
+      "required": true,
+      "origin": "system",
+      "primary_key": true,
+      "default": "generate_id()"
+    },
+    {
+      "name": "Cron id",
+      "slug": "cron_id",
+      "type": "id",
+      "origin": "system",
+      "required": true
+    },
+    {
+      "name": "Active",
+      "slug": "active",
+      "type": "boolean",
+      "origin": "system",
+      "required": true
+    },
+    {
+      "name": "Last executed",
+      "slug": "last_executed",
+      "type": "date",
+      "origin": "system"
+    },
+    {
+      "name": "Updated at",
+      "slug": "updated_at",
+      "type": "date",
+      "origin": "system"
+    },
+    {
+      "name": "Created at",
+      "slug": "created_at",
+      "type": "date",
+      "origin": "system",
+      "required": true,
+      "default": "now()"
+    }
+  ]
+}

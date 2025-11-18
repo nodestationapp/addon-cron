@@ -21,11 +21,14 @@
     "email": "ceo@nodestation.app"
   },
   "dependencies": {
-    "node-cron": "^4.1.0"
+    "node-cron": "^4.0.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.3",
     "release-it": "^17.10.0"
+  },
+  "peerDependencies": {
+    "glob": "^11.0.2"
   },
   "imports": {
     "#client/*": "./client/*",

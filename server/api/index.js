@@ -1,28 +1,33 @@
-import addCron from "./addCron.js";
+import upsertCron from "./upsertCron.js";
 import getCrons from "./getCrons.js";
 import deleteCron from "./deleteCron.js";
 
-import authMiddleware from "@nstation/auth/utils/authMiddleware.js";
+import getCronsSchema from "../docs/get-crons.js";
+import addCronSchema from "../docs/post-cron.js";
+import deleteCronSchema from "../docs/delete-cron.js";
 
-import "#server/utils/cronWorker.js";
+import "#server/utils/cronInit.js";
 
 export default [
   {
     method: "GET",
     path: "/admin-api/crons",
     handler: getCrons,
-    middlewares: [authMiddleware(["admin"])],
+    auth: ["admin"],
+    validation: getCronsSchema,
   },
   {
     method: "POST",
     path: "/admin-api/crons",
-    handler: addCron,
-    middlewares: [authMiddleware(["admin"])],
+    handler: upsertCron,
+    auth: ["admin"],
+    validation: addCronSchema,
   },
   {
     method: "DELETE",
     path: "/admin-api/crons/:id",
     handler: deleteCron,
-    middlewares: [authMiddleware(["admin"])],
+    auth: ["admin"],
+    validation: deleteCronSchema,
   },
 ];

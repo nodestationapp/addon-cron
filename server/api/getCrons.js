@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { glob } from "glob";
+
+import { knex } from "@nstation/db";
 import { rootPath } from "@nstation/utils";
 
 function convertExportDefault(source) {
@@ -16,17 +18,7 @@ function convertExportDefault(source) {
   if (!expressionMatch) throw new Error("Cron expression not found");
   const expression = expressionMatch[1];
 
-  const activeMatch = source.match(/active\s*:\s*([^,]+)/);
-  if (!activeMatch) throw new Error("Cron active not found");
-  const active = activeMatch[1];
-
-  const runMatch = source.match(
-    /run\s*:\s*(?:async\s*)?\(\)\s*=>\s*{([^]*)}\s*,?\s*$/m
-  );
-  if (!runMatch) throw new Error("Cron run function not found");
-  const runBody = runMatch[1].trim();
-
-  return { id, name, expression, active, content: runBody };
+  return { id, name, expression };
 }
 
 export default async (req, res) => {
@@ -41,32 +33,45 @@ export default async (req, res) => {
   }
 
   try {
-    let emailFiles = glob.sync(path.join(rootPath, "src", "crons", "*.js"));
+    let cronDirectories = glob.sync(path.join(rootPath, "src", "crons", "*/"), {
+      onlyDirectories: true,
+    });
 
-    const startIndex = page * pageSize;
-    const endIndex = startIndex + pageSize;
+    let crons = [];
 
-    let emails = [];
+    for await (const directory of cronDirectories) {
+      let cron = fs.readFileSync(path.join(directory, "index.js"), "utf8");
+      const content = fs.readFileSync(path.join(directory, "run.js"), "utf8");
 
-    for (const file of emailFiles) {
-      let email = fs.readFileSync(file, "utf8");
-      email = convertExportDefault(email);
-      emails.push(email);
+      cron = convertExportDefault(cron);
+
+      const dbCron = await knex("nodestation_crons")
+        .where({ cron_id: cron.id })
+        .first();
+
+      crons.push({
+        ...cron,
+        content,
+        active: !!dbCron?.active,
+        last_executed: dbCron?.last_executed,
+      });
     }
 
     if (!!sort) {
-      emails.sort((a, b) =>
+      crons.sort((a, b) =>
         sort?.sort === "asc"
           ? a[sort?.field].localeCompare(b[sort?.field])
           : b[sort?.field].localeCompare(a[sort?.field])
       );
     }
 
-    const paginatedFiles = emails.slice(startIndex, endIndex);
+    const startIndex = page * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedFiles = crons.slice(startIndex, endIndex);
 
     return res.status(200).json({
       data: paginatedFiles,
-      meta: { page: page, pageSize, count: emailFiles.length },
+      meta: { page: page, pageSize, count: cronDirectories.length },
     });
   } catch (err) {
     console.error(err);

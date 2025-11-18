@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { useLocation, useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
@@ -11,14 +10,11 @@ import MuiTable from "@nstation/tables/client/components/MuiTable/index.js";
 import { useCrons } from "#client/contexts/crons.js";
 
 import AddIcon from "@mui/icons-material/Add";
-// import Settings from "@mui/icons-material/Settings";
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
 
 import { useUpdateQueryParam } from "@nstation/design-system/hooks";
 
 const Crons = () => {
-  // const navigate = useNavigate();
-  // const { pathname } = useLocation();
   const updateQueryParam = useUpdateQueryParam();
 
   const { crons, loading, deleteCron, sort } = useCrons();
@@ -43,9 +39,6 @@ const Crons = () => {
 
   const action = () => (
     <>
-      {/* <IconButton size="micro" onClick={() => navigate(`${pathname}/settings`)}>
-        <Settings />
-      </IconButton> */}
       {process.env.NODE_ENV === "development" && (
         <Button
           size="small"
@@ -97,13 +90,15 @@ const Crons = () => {
         columns={[
           {
             flex: 1,
-            field: "name",
+            name: "Name",
+            slug: "name",
             headerName: "Name",
             renderCell: (params) => params?.value,
           },
           {
             flex: 1,
-            field: "active",
+            name: "Status",
+            slug: "active",
             headerName: "Status",
             type: "select",
             variant: "single",
@@ -119,12 +114,20 @@ const Crons = () => {
                 value: false,
               },
             ],
-            // renderCell: (params) => params?.value,
           },
           {
             flex: 1,
-            field: "expression",
+            name: "Expression",
+            slug: "expression",
             headerName: "Expression",
+            renderCell: (params) => params?.value,
+          },
+          {
+            flex: 1,
+            name: "Last executed",
+            slug: "last_executed",
+            headerName: "Last executed",
+            type: "date",
             renderCell: (params) => params?.value,
           },
         ]}
